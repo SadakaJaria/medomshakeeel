@@ -80,7 +80,7 @@
 - [x] تهيئة المشروع (Vite + React + Tailwind + PWA + RTL) — Vite 8 + React 19 + Tailwind v4 (`@tailwindcss/vite`) + `vite-plugin-pwa`. ملاحظة: React 19 بدل 18 (ما جاء مع القالب الحديث، متوافق تماماً).
 - [x] هيكل المجلدات + مكونات الأساس (Layout, Nav, ThemeProvider) — `src/components/layout/`, `src/context/`, `src/pages/` مع react-router v7 للتنقل (قرار معماري: راوتر قياسي للـ SPA + `vercel.json` rewrites). ثيم داكن/فاتح يُحفظ في localStorage.
 - [x] تضمين أول TradingView widgets (Ticker Tape + Market Overview) — مكوّن `TradingViewEmbed` عام (dir=ltr، يعيد التحميل عند تغيّر الثيم/الإعدادات) في `src/components/tradingview/`. ملاحظة: بيئة التطوير السحابية تحجب s3.tradingview.com فالتحقق البصري النهائي يتم محلياً/على Vercel.
-- [ ] بنية halal-universe + شاشة إدارتها
+- [x] بنية halal-universe + شاشة إدارتها — `HalalUniverseContext` (localStorage، seed في `src/data/`، مفتاح فريد tvSymbol) + صفحة `/universe`: جدول بفلاتر (بحث/سوق/نوع/حالة)، نموذج إضافة/تعديل، حذف، تصدير/استيراد JSON. تنبيه ⚠ تلقائي عند الانتقال من متوافقة لغير متوافقة (يُحفظ previousStatus). ثوابت التسميات في `src/lib/halal.js`. مزامنة Gist لاحقاً.
 - [ ] Watchlist
 - [ ] صفحة الورقة المالية
 - [ ] ربط Finnhub للأخبار

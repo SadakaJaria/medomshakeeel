@@ -4,6 +4,7 @@ import { useTheme } from '../../context/ThemeContext'
 const links = [
   { to: '/', label: 'الداشبورد' },
   { to: '/watchlist', label: 'المتابعة' },
+  { to: '/universe', label: 'الكون الحلال' },
   { to: '/security', label: 'الورقة المالية' },
 ]
 
