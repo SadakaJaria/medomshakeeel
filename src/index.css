@@ -1,0 +1,53 @@
+@import 'tailwindcss';
+
+@theme {
+  /* خلفيات التيرمينال الداكن */
+  --color-terminal-bg: #0a0e14;
+  --color-terminal-surface: #11161f;
+  --color-terminal-border: #1f2733;
+
+  /* نصوص */
+  --color-terminal-text: #d9e1ec;
+  --color-terminal-muted: #7d8a9c;
+
+  /* حركة السوق */
+  --color-market-up: #22c55e;
+  --color-market-down: #ef4444;
+
+  /* حالات شرعية */
+  --color-shariah-compliant: #22c55e;
+  --color-shariah-non-compliant: #ef4444;
+  --color-shariah-questionable: #eab308;
+  --color-shariah-not-screened: #7d8a9c;
+
+  /* خطوط */
+  --font-sans: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+/* داكن افتراضياً — ThemeProvider يبدّل data-theme و color-scheme */
+html {
+  color-scheme: dark;
+}
+
+[data-theme='light'] {
+  --color-terminal-bg: #f2f5f9;
+  --color-terminal-surface: #ffffff;
+  --color-terminal-border: #d8dfe8;
+  --color-terminal-text: #18212e;
+  --color-terminal-muted: #5c6b7d;
+}
+
+body {
+  background-color: var(--color-terminal-bg);
+  color: var(--color-terminal-text);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+}
+
+/* الأرقام والرموز المالية تبقى LTR داخل الواجهة RTL */
+.ltr-nums {
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-family: var(--font-mono);
+}

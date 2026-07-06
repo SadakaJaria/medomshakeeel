@@ -1,0 +1,92 @@
+[
+  {
+    "symbol": "AAPL",
+    "exchange": "NASDAQ",
+    "tvSymbol": "NASDAQ:AAPL",
+    "type": "stock",
+    "market": "US",
+    "shariah": {
+      "status": "not_screened",
+      "source": "manual",
+      "purificationRatio": 0,
+      "lastChecked": ""
+    },
+    "tags": [
+      "tech"
+    ],
+    "notes": "",
+    "watchlist": true
+  },
+  {
+    "symbol": "MSFT",
+    "exchange": "NASDAQ",
+    "tvSymbol": "NASDAQ:MSFT",
+    "type": "stock",
+    "market": "US",
+    "shariah": {
+      "status": "not_screened",
+      "source": "manual",
+      "purificationRatio": 0,
+      "lastChecked": ""
+    },
+    "tags": [
+      "tech"
+    ],
+    "notes": "",
+    "watchlist": false
+  },
+  {
+    "symbol": "THYAO",
+    "exchange": "BIST",
+    "tvSymbol": "BIST:THYAO",
+    "type": "stock",
+    "market": "BIST",
+    "shariah": {
+      "status": "not_screened",
+      "source": "manual",
+      "purificationRatio": 0,
+      "lastChecked": ""
+    },
+    "tags": [
+      "aviation"
+    ],
+    "notes": "الخطوط الجوية التركية",
+    "watchlist": true
+  },
+  {
+    "symbol": "2222",
+    "exchange": "TADAWUL",
+    "tvSymbol": "TADAWUL:2222",
+    "type": "stock",
+    "market": "GCC",
+    "shariah": {
+      "status": "not_screened",
+      "source": "manual",
+      "purificationRatio": 0,
+      "lastChecked": ""
+    },
+    "tags": [
+      "energy"
+    ],
+    "notes": "أرامكو السعودية",
+    "watchlist": false
+  },
+  {
+    "symbol": "XAUUSD",
+    "exchange": "OANDA",
+    "tvSymbol": "OANDA:XAUUSD",
+    "type": "commodity",
+    "market": "GLOBAL",
+    "shariah": {
+      "status": "not_screened",
+      "source": "manual",
+      "purificationRatio": 0,
+      "lastChecked": ""
+    },
+    "tags": [
+      "gold"
+    ],
+    "notes": "الذهب مقابل الدولار",
+    "watchlist": true
+  }
+]
