@@ -4,6 +4,20 @@ import { MARKETS, SECURITY_TYPES } from '../lib/halal'
 import AdvancedChart from '../components/tradingview/AdvancedChart'
 import SymbolInfo from '../components/tradingview/SymbolInfo'
 import ShariahCard from '../components/halal/ShariahCard'
+import NewsList from '../components/news/NewsList'
+import { getCompanyNews } from '../lib/finnhub'
+import { useNews } from '../hooks/useNews'
+
+/** أخبار الورقة — الرمز المجرد (AAPL) كما يتوقعه Finnhub */
+function SecurityNews({ symbol }) {
+  const news = useNews(() => getCompanyNews(symbol), [symbol])
+  return (
+    <NewsList
+      {...news}
+      emptyMessage="لا أخبار لهذه الورقة — تغطية Finnhub خارج السوق الأمريكي محدودة."
+    />
+  )
+}
 
 function SecurityPage() {
   const { tvSymbol: rawParam } = useParams()
@@ -108,9 +122,7 @@ function SecurityPage() {
 
           <div className="rounded border border-terminal-border bg-terminal-surface p-4">
             <h2 className="mb-2 text-sm font-semibold">أخبار الورقة</h2>
-            <p className="text-xs text-terminal-muted">
-              تُربط مع Finnhub في البند القادم.
-            </p>
+            <SecurityNews symbol={tvSymbol.split(':').pop()} />
           </div>
         </div>
       </div>

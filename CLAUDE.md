@@ -83,7 +83,7 @@
 - [x] بنية halal-universe + شاشة إدارتها — `HalalUniverseContext` (localStorage، seed في `src/data/`، مفتاح فريد tvSymbol) + صفحة `/universe`: جدول بفلاتر (بحث/سوق/نوع/حالة)، نموذج إضافة/تعديل، حذف، تصدير/استيراد JSON. تنبيه ⚠ تلقائي عند الانتقال من متوافقة لغير متوافقة (يُحفظ previousStatus). ثوابت التسميات في `src/lib/halal.js`. مزامنة Gist لاحقاً.
 - [x] Watchlist — عضوية المتابعة flag `watchlist` على ورقة الكون الحلال (نجمة ★ في شاشة الإدارة). صفحة `/watchlist`: بطاقات مقسمة حسب السوق، السعر والتغيّر عبر TradingView Single-Quote widget + شارة شرعية + رابط لصفحة الورقة `/security/:tvSymbol`.
 - [x] صفحة الورقة المالية — `/security/:tvSymbol`: شارت Advanced Chart + شريط Symbol Info + بطاقة `ShariahCard` كاملة (المصدر، نسبة التطهير، آخر فحص، تنبيه الانقلاب، وسوم، ملاحظات) + نجمة متابعة. رمز خارج الكون يظهر تحذير مع رابط للإدارة. `/security` بدون رمز = قائمة اختيار. زر "حلّل" والأخبار placeholders لبنودهما.
-- [ ] ربط Finnhub للأخبار
+- [x] ربط Finnhub للأخبار — `src/lib/finnhub.js` (أخبار سوق عامة + أخبار شركة آخر 14 يوم، كاش sessionStorage لمدة 10 دقائق احتراماً للـ free tier) + hook `useNews` + مكوّن `NewsList` (حالات: بلا مفتاح/تحميل/خطأ/فارغ، وقت نسبي عربي). الداشبورد يعرض 8 أخبار سوق، صفحة الورقة أخبار الرمز المجرد. يتطلب `VITE_FINNHUB_API_KEY` في `.env`.
 - [ ] قرار وربط API الفرز الشرعي (Musaffa vs HalalScreener)
 - [ ] تحليل AI (Claude API)
 - [ ] PWA + نشر Vercel

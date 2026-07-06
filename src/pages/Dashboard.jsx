@@ -3,9 +3,13 @@ import TickerTape from '../components/tradingview/TickerTape'
 import MarketOverview from '../components/tradingview/MarketOverview'
 import { useHalalUniverse } from '../context/HalalUniverseContext'
 import { SHARIAH_STATUSES } from '../lib/halal'
+import { getMarketNews } from '../lib/finnhub'
+import { useNews } from '../hooks/useNews'
+import NewsList from '../components/news/NewsList'
 
 function Dashboard() {
   const { universe } = useHalalUniverse()
+  const news = useNews(() => getMarketNews(8), [])
   const counts = universe.reduce((acc, s) => {
     const status = SHARIAH_STATUSES[s.shariah.status]
       ? s.shariah.status
@@ -31,8 +35,8 @@ function Dashboard() {
             <h2 className="mb-2 text-sm font-semibold text-terminal-muted">
               أهم الأخبار
             </h2>
-            <div className="rounded border border-terminal-border bg-terminal-surface p-4 text-sm text-terminal-muted">
-              أخبار السوق اليومية — تُربط مع Finnhub في بند لاحق.
+            <div className="rounded border border-terminal-border bg-terminal-surface p-4">
+              <NewsList {...news} />
             </div>
           </div>
 
