@@ -81,7 +81,7 @@
 - [x] هيكل المجلدات + مكونات الأساس (Layout, Nav, ThemeProvider) — `src/components/layout/`, `src/context/`, `src/pages/` مع react-router v7 للتنقل (قرار معماري: راوتر قياسي للـ SPA + `vercel.json` rewrites). ثيم داكن/فاتح يُحفظ في localStorage.
 - [x] تضمين أول TradingView widgets (Ticker Tape + Market Overview) — مكوّن `TradingViewEmbed` عام (dir=ltr، يعيد التحميل عند تغيّر الثيم/الإعدادات) في `src/components/tradingview/`. ملاحظة: بيئة التطوير السحابية تحجب s3.tradingview.com فالتحقق البصري النهائي يتم محلياً/على Vercel.
 - [x] بنية halal-universe + شاشة إدارتها — `HalalUniverseContext` (localStorage، seed في `src/data/`، مفتاح فريد tvSymbol) + صفحة `/universe`: جدول بفلاتر (بحث/سوق/نوع/حالة)، نموذج إضافة/تعديل، حذف، تصدير/استيراد JSON. تنبيه ⚠ تلقائي عند الانتقال من متوافقة لغير متوافقة (يُحفظ previousStatus). ثوابت التسميات في `src/lib/halal.js`. مزامنة Gist لاحقاً.
-- [ ] Watchlist
+- [x] Watchlist — عضوية المتابعة flag `watchlist` على ورقة الكون الحلال (نجمة ★ في شاشة الإدارة). صفحة `/watchlist`: بطاقات مقسمة حسب السوق، السعر والتغيّر عبر TradingView Single-Quote widget + شارة شرعية + رابط لصفحة الورقة `/security/:tvSymbol`.
 - [ ] صفحة الورقة المالية
 - [ ] ربط Finnhub للأخبار
 - [ ] قرار وربط API الفرز الشرعي (Musaffa vs HalalScreener)

@@ -11,8 +11,11 @@
       "purificationRatio": 0,
       "lastChecked": ""
     },
-    "tags": ["tech"],
-    "notes": ""
+    "tags": [
+      "tech"
+    ],
+    "notes": "",
+    "watchlist": true
   },
   {
     "symbol": "MSFT",
@@ -26,8 +29,11 @@
       "purificationRatio": 0,
       "lastChecked": ""
     },
-    "tags": ["tech"],
-    "notes": ""
+    "tags": [
+      "tech"
+    ],
+    "notes": "",
+    "watchlist": false
   },
   {
     "symbol": "THYAO",
@@ -41,8 +47,11 @@
       "purificationRatio": 0,
       "lastChecked": ""
     },
-    "tags": ["aviation"],
-    "notes": "الخطوط الجوية التركية"
+    "tags": [
+      "aviation"
+    ],
+    "notes": "الخطوط الجوية التركية",
+    "watchlist": true
   },
   {
     "symbol": "2222",
@@ -56,8 +65,11 @@
       "purificationRatio": 0,
       "lastChecked": ""
     },
-    "tags": ["energy"],
-    "notes": "أرامكو السعودية"
+    "tags": [
+      "energy"
+    ],
+    "notes": "أرامكو السعودية",
+    "watchlist": false
   },
   {
     "symbol": "XAUUSD",
@@ -71,7 +83,10 @@
       "purificationRatio": 0,
       "lastChecked": ""
     },
-    "tags": ["gold"],
-    "notes": "الذهب مقابل الدولار"
+    "tags": [
+      "gold"
+    ],
+    "notes": "الذهب مقابل الدولار",
+    "watchlist": true
   }
 ]

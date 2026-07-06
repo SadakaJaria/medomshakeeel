@@ -59,6 +59,15 @@ export function HalalUniverseProvider({ children }) {
     setUniverse((prev) => prev.filter((s) => s.tvSymbol !== tvSymbol))
   }
 
+  /** إضافة/إزالة من قائمة المتابعة */
+  const toggleWatchlist = (tvSymbol) => {
+    setUniverse((prev) =>
+      prev.map((s) =>
+        s.tvSymbol === tvSymbol ? { ...s, watchlist: !s.watchlist } : s,
+      ),
+    )
+  }
+
   /** استبدال كامل — للاستيراد من ملف JSON */
   const replaceUniverse = (list) => {
     if (Array.isArray(list)) setUniverse(list)
@@ -71,6 +80,7 @@ export function HalalUniverseProvider({ children }) {
         addSecurity,
         updateSecurity,
         removeSecurity,
+        toggleWatchlist,
         replaceUniverse,
       }}
     >

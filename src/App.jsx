@@ -18,6 +18,7 @@ function App() {
               <Route path="/watchlist" element={<Watchlist />} />
               <Route path="/universe" element={<HalalUniverse />} />
               <Route path="/security" element={<SecurityPage />} />
+              <Route path="/security/:tvSymbol" element={<SecurityPage />} />
             </Route>
           </Routes>
         </BrowserRouter>

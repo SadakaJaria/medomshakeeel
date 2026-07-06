@@ -8,8 +8,14 @@ const filterClass =
   'rounded border border-terminal-border bg-terminal-surface px-2 py-1.5 text-sm focus:outline-none'
 
 function HalalUniverse() {
-  const { universe, addSecurity, updateSecurity, removeSecurity, replaceUniverse } =
-    useHalalUniverse()
+  const {
+    universe,
+    addSecurity,
+    updateSecurity,
+    removeSecurity,
+    toggleWatchlist,
+    replaceUniverse,
+  } = useHalalUniverse()
 
   const [search, setSearch] = useState('')
   const [marketFilter, setMarketFilter] = useState('')
@@ -218,6 +224,18 @@ function HalalUniverse() {
                   {s.notes || '—'}
                 </td>
                 <td className="px-3 py-2 text-end">
+                  <button
+                    type="button"
+                    onClick={() => toggleWatchlist(s.tvSymbol)}
+                    title={s.watchlist ? 'إزالة من المتابعة' : 'إضافة للمتابعة'}
+                    className={`me-2 transition-colors ${
+                      s.watchlist
+                        ? 'text-shariah-questionable'
+                        : 'text-terminal-muted hover:text-shariah-questionable'
+                    }`}
+                  >
+                    {s.watchlist ? '★' : '☆'}
+                  </button>
                   <button
                     type="button"
                     onClick={() => setFormMode(s)}
