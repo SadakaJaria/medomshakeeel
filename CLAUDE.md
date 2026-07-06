@@ -78,7 +78,7 @@
 
 ## حالة المشروع
 - [x] تهيئة المشروع (Vite + React + Tailwind + PWA + RTL) — Vite 8 + React 19 + Tailwind v4 (`@tailwindcss/vite`) + `vite-plugin-pwa`. ملاحظة: React 19 بدل 18 (ما جاء مع القالب الحديث، متوافق تماماً).
-- [ ] هيكل المجلدات + مكونات الأساس (Layout, Nav, ThemeProvider)
+- [x] هيكل المجلدات + مكونات الأساس (Layout, Nav, ThemeProvider) — `src/components/layout/`, `src/context/`, `src/pages/` مع react-router v7 للتنقل (قرار معماري: راوتر قياسي للـ SPA + `vercel.json` rewrites). ثيم داكن/فاتح يُحفظ في localStorage.
 - [ ] تضمين أول TradingView widgets (Ticker Tape + Market Overview)
 - [ ] بنية halal-universe + شاشة إدارتها
 - [ ] Watchlist

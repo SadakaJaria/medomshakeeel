@@ -25,8 +25,17 @@
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 }
 
+/* داكن افتراضياً — ThemeProvider يبدّل data-theme و color-scheme */
 html {
   color-scheme: dark;
+}
+
+[data-theme='light'] {
+  --color-terminal-bg: #f2f5f9;
+  --color-terminal-surface: #ffffff;
+  --color-terminal-border: #d8dfe8;
+  --color-terminal-text: #18212e;
+  --color-terminal-muted: #5c6b7d;
 }
 
 body {
