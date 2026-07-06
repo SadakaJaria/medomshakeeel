@@ -24,6 +24,7 @@ export const SHARIAH_STATUSES = {
 }
 
 export const SHARIAH_SOURCES = {
+  halalterminal: 'Halal Terminal',
   musaffa: 'Musaffa',
   halalscreener: 'HalalScreener',
   manual: 'يدوي',

@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { useHalalUniverse } from '../context/HalalUniverseContext'
 import { SHARIAH_STATUSES, SECURITY_TYPES, MARKETS } from '../lib/halal'
+import { refreshScreening, hasScreeningKey } from '../lib/screening'
 import ShariahBadge from '../components/halal/ShariahBadge'
 import SecurityForm from '../components/halal/SecurityForm'
 
@@ -22,7 +23,21 @@ function HalalUniverse() {
   const [typeFilter, setTypeFilter] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
   const [formMode, setFormMode] = useState(null) // null | 'add' | security
+  const [screening, setScreening] = useState(null) // null | {done,total} | {summary}
   const importRef = useRef(null)
+
+  const handleRefreshScreening = async () => {
+    setScreening({ done: 0, total: 0 })
+    const result = await refreshScreening(universe, {
+      onProgress: (done, total) => setScreening({ done, total }),
+    })
+    for (const { tvSymbol, security } of result.updated) {
+      updateSecurity(tvSymbol, security)
+    }
+    setScreening({
+      summary: `تم تحديث ${result.updated.length} · تخطّي ${result.skipped.length} · فشل ${result.failed.length}`,
+    })
+  }
 
   const filtered = universe.filter((s) => {
     const q = search.trim().toLowerCase()
@@ -90,7 +105,27 @@ function HalalUniverse() {
         <span className="text-sm text-terminal-muted">
           {universe.length} ورقة
         </span>
-        <div className="ms-auto flex gap-2">
+        <div className="ms-auto flex flex-wrap items-center gap-2">
+          {screening?.summary && (
+            <span className="text-xs text-terminal-muted">
+              {screening.summary}
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={handleRefreshScreening}
+            disabled={!hasScreeningKey || (screening && !screening.summary)}
+            title={
+              hasScreeningKey
+                ? 'فحص الأوراق عبر Halal Terminal (يتخطى المفحوصة خلال 30 يوم)'
+                : 'أضف VITE_HALALTERMINAL_API_KEY في .env للتفعيل'
+            }
+            className="rounded border border-terminal-border px-3 py-1.5 text-sm text-terminal-muted transition-colors hover:text-terminal-text disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {screening && !screening.summary
+              ? `جارِ الفرز… ${screening.done}/${screening.total || '؟'}`
+              : 'تحديث الفرز'}
+          </button>
           <button
             type="button"
             onClick={() => setFormMode('add')}
