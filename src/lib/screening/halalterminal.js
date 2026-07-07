@@ -54,6 +54,15 @@ function pickFirst(obj, keys) {
 }
 
 /**
+ * البيانات الخام للفرز — النسب المالية ونتائج المنهجيات كما يرجعها المزود،
+ * بلا تطبيع. تُستخدم في برومبت تحليل AI (ميزة النسب الشفافة).
+ */
+export async function screenSymbolDetailed(symbol) {
+  const data = await get(SCREEN_PATH(symbol))
+  return data?.data ?? data
+}
+
+/**
  * فرز رمز واحد — يرجع كائن shariah بمخطط المشروع.
  * الحقول تُلتقط بمرونة لأن أسماءها قد تختلف قليلاً عن التوثيق.
  */

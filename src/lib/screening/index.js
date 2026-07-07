@@ -4,6 +4,7 @@
 import { screenSymbol, hasScreeningKey } from './halalterminal'
 
 export { hasScreeningKey }
+export { screenSymbolDetailed } from './halalterminal'
 
 /** الأنواع القابلة للفرز الآلي — السلع والعملات تُقيَّم يدوياً */
 const SCREENABLE_TYPES = new Set(['stock', 'etf', 'fund'])
