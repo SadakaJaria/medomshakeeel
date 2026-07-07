@@ -62,7 +62,32 @@ export function emptySecurity() {
     },
     tags: [],
     notes: '',
+    details: {},
   }
+}
+
+// حقول تفصيلية للإدخال اليدوي حسب النوع — للأدوات التي لا تغطيها APIs جيداً
+// (صكوك، صناديق إسلامية). كل حقل: [مفتاح، تسمية، نوع الإدخال].
+export const INSTRUMENT_FIELDS = {
+  sukuk: [
+    ['issuer', 'الجهة المُصدِرة', 'text'],
+    ['couponRate', 'نسبة الكوبون %', 'number'],
+    ['maturityDate', 'تاريخ الاستحقاق', 'date'],
+    ['faceValue', 'القيمة الاسمية', 'number'],
+    ['currency', 'العملة', 'text'],
+    ['structure', 'هيكل الصك (إجارة/مضاربة…)', 'text'],
+  ],
+  fund: [
+    ['manager', 'مدير الصندوق', 'text'],
+    ['nav', 'صافي قيمة الأصول (NAV)', 'number'],
+    ['currency', 'العملة', 'text'],
+    ['expenseRatio', 'نسبة المصاريف %', 'number'],
+  ],
+}
+
+/** هل النوع يحتاج إدخالاً يدوياً منظماً (صكوك/صندوق)؟ */
+export function hasInstrumentDetails(type) {
+  return type === 'sukuk' || type === 'fund'
 }
 
 /** هل تغيّرت الورقة من متوافقة إلى غير متوافقة؟ (تنبيه بصري) */

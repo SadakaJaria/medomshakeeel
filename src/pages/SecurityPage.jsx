@@ -4,6 +4,7 @@ import { MARKETS, SECURITY_TYPES } from '../lib/halal'
 import AdvancedChart from '../components/tradingview/AdvancedChart'
 import SymbolInfo from '../components/tradingview/SymbolInfo'
 import ShariahCard from '../components/halal/ShariahCard'
+import InstrumentDetailsCard from '../components/halal/InstrumentDetailsCard'
 import NewsList from '../components/news/NewsList'
 import AnalyzeCard from '../components/analysis/AnalyzeCard'
 import { getCompanyNews } from '../lib/finnhub'
@@ -108,6 +109,7 @@ function SecurityPage() {
 
         <div className="space-y-4">
           {security && <ShariahCard security={security} />}
+          {security && <InstrumentDetailsCard security={security} />}
 
           <AnalyzeCard
             security={
