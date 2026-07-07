@@ -29,7 +29,12 @@ function apiDevPlugin(env) {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
+  // على GitHub Pages المشروع يُقدَّم من مسار فرعي /medomshakeeel/؛
+  // على Vercel والتطوير المحلي من الجذر /. متغير GITHUB_PAGES يفعّل الأول.
+  const base = process.env.GITHUB_PAGES ? '/medomshakeeel/' : '/'
+
   return {
+    base,
     plugins: [
       react(),
       tailwindcss(),
