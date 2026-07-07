@@ -4,7 +4,9 @@ import { MARKETS, SECURITY_TYPES } from '../lib/halal'
 import AdvancedChart from '../components/tradingview/AdvancedChart'
 import SymbolInfo from '../components/tradingview/SymbolInfo'
 import ShariahCard from '../components/halal/ShariahCard'
+import InstrumentDetailsCard from '../components/halal/InstrumentDetailsCard'
 import NewsList from '../components/news/NewsList'
+import AnalyzeCard from '../components/analysis/AnalyzeCard'
 import { getCompanyNews } from '../lib/finnhub'
 import { useNews } from '../hooks/useNews'
 
@@ -107,18 +109,17 @@ function SecurityPage() {
 
         <div className="space-y-4">
           {security && <ShariahCard security={security} />}
+          {security && <InstrumentDetailsCard security={security} />}
 
-          <div className="rounded border border-terminal-border bg-terminal-surface p-4">
-            <h2 className="mb-2 text-sm font-semibold">تحليل AI</h2>
-            <button
-              type="button"
-              disabled
-              title="يُفعّل عند ربط Claude API"
-              className="w-full cursor-not-allowed rounded border border-terminal-border px-3 py-2 text-sm text-terminal-muted opacity-60"
-            >
-              حلّل — قريباً
-            </button>
-          </div>
+          <AnalyzeCard
+            security={
+              security ?? {
+                tvSymbol,
+                symbol: tvSymbol.split(':').pop(),
+                shariah: { status: 'not_screened', source: 'manual' },
+              }
+            }
+          />
 
           <div className="rounded border border-terminal-border bg-terminal-surface p-4">
             <h2 className="mb-2 text-sm font-semibold">أخبار الورقة</h2>

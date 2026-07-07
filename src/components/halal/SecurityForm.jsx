@@ -4,6 +4,8 @@ import {
   SHARIAH_SOURCES,
   SECURITY_TYPES,
   MARKETS,
+  INSTRUMENT_FIELDS,
+  hasInstrumentDetails,
   emptySecurity,
 } from '../../lib/halal'
 
@@ -23,6 +25,8 @@ function SecurityForm({ initial, existingSymbols, onSubmit, onCancel }) {
   const set = (field, value) => setForm((f) => ({ ...f, [field]: value }))
   const setShariah = (field, value) =>
     setForm((f) => ({ ...f, shariah: { ...f.shariah, [field]: value } }))
+  const setDetail = (field, value) =>
+    setForm((f) => ({ ...f, details: { ...f.details, [field]: value } }))
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -182,6 +186,28 @@ function SecurityForm({ initial, existingSymbols, onSubmit, onCancel }) {
           />
         </div>
       </div>
+
+      {hasInstrumentDetails(form.type) && (
+        <fieldset className="rounded border border-terminal-border/50 bg-terminal-bg p-3">
+          <legend className="px-1 text-xs text-terminal-muted">
+            تفاصيل {SECURITY_TYPES[form.type]} (إدخال يدوي)
+          </legend>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {INSTRUMENT_FIELDS[form.type].map(([field, label, inputType]) => (
+              <div key={field}>
+                <label className={labelClass} htmlFor={`d-${field}`}>{label}</label>
+                <input
+                  id={`d-${field}`}
+                  type={inputType}
+                  className={`${inputClass} ${inputType === 'number' || inputType === 'date' ? 'ltr-nums' : ''}`}
+                  value={form.details?.[field] ?? ''}
+                  onChange={(e) => setDetail(field, e.target.value)}
+                />
+              </div>
+            ))}
+          </div>
+        </fieldset>
+      )}
 
       {error && (
         <p className="text-sm text-shariah-non-compliant">{error}</p>

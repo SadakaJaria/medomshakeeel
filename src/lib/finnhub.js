@@ -52,6 +52,22 @@ export async function getMarketNews(limit = 8) {
   return (Array.isArray(items) ? items : []).slice(0, limit)
 }
 
+/** سعر لحظي — للسياق في تحليل AI (التغطية خارج US محدودة) */
+export async function getQuote(symbol) {
+  const q = await get('/quote', { symbol })
+  // Finnhub يرجع أصفاراً للرموز غير المدعومة
+  if (!q || !q.c) return null
+  return {
+    current: q.c,
+    change: q.d,
+    percentChange: q.dp,
+    high: q.h,
+    low: q.l,
+    open: q.o,
+    prevClose: q.pc,
+  }
+}
+
 /**
  * أخبار ورقة محددة — آخر `days` يوم.
  * Finnhub يستخدم الرمز المجرد (AAPL) — التغطية خارج السوق الأمريكي ضعيفة،

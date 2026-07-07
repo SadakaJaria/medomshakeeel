@@ -3,9 +3,12 @@ import { useTheme } from '../../context/ThemeContext'
 
 const links = [
   { to: '/', label: 'الداشبورد' },
+  { to: '/markets', label: 'الأسواق' },
   { to: '/watchlist', label: 'المتابعة' },
   { to: '/universe', label: 'الكون الحلال' },
   { to: '/security', label: 'الورقة المالية' },
+  { to: '/compare', label: 'مقارنة' },
+  { to: '/tools', label: 'الأدوات' },
 ]
 
 function Nav() {

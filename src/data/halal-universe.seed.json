@@ -88,5 +88,31 @@
     ],
     "notes": "الذهب مقابل الدولار",
     "watchlist": true
+  },
+  {
+    "symbol": "SUKUK-IsDB",
+    "exchange": "MANUAL",
+    "tvSymbol": "MANUAL:SUKUK-IsDB",
+    "type": "sukuk",
+    "market": "GCC",
+    "shariah": {
+      "status": "compliant",
+      "source": "manual",
+      "purificationRatio": 0,
+      "lastChecked": "2026-07-01"
+    },
+    "tags": [
+      "sukuk"
+    ],
+    "notes": "صك تجريبي للبنك الإسلامي للتنمية",
+    "watchlist": false,
+    "details": {
+      "issuer": "Islamic Development Bank",
+      "couponRate": "4.5",
+      "maturityDate": "2029-09-15",
+      "faceValue": "1000",
+      "currency": "USD",
+      "structure": "إجارة"
+    }
   }
 ]

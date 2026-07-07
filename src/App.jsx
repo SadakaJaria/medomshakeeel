@@ -6,17 +6,23 @@ import Dashboard from './pages/Dashboard'
 import Watchlist from './pages/Watchlist'
 import SecurityPage from './pages/SecurityPage'
 import HalalUniverse from './pages/HalalUniverse'
+import Tools from './pages/Tools'
+import Markets from './pages/Markets'
+import Compare from './pages/Compare'
 
 function App() {
   return (
     <ThemeProvider>
       <HalalUniverseProvider>
-        <BrowserRouter>
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
           <Routes>
             <Route element={<Layout />}>
               <Route path="/" element={<Dashboard />} />
               <Route path="/watchlist" element={<Watchlist />} />
               <Route path="/universe" element={<HalalUniverse />} />
+              <Route path="/markets" element={<Markets />} />
+              <Route path="/compare" element={<Compare />} />
+              <Route path="/tools" element={<Tools />} />
               <Route path="/security" element={<SecurityPage />} />
               <Route path="/security/:tvSymbol" element={<SecurityPage />} />
             </Route>
