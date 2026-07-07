@@ -36,7 +36,31 @@ export default defineConfig(({ mode }) => {
       apiDevPlugin(env),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.svg'],
+        includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
+        workbox: {
+          // SPA offline: أي مسار داخلي يقدَّم من index.html المخزَّن،
+          // ما عدا /api — نداءات التحليل لا تُكاش أبداً
+          navigateFallbackDenylist: [/^\/api\//],
+          runtimeCaching: [
+            {
+              urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+              handler: 'StaleWhileRevalidate',
+              options: { cacheName: 'google-fonts-css' },
+            },
+            {
+              urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'google-fonts-files',
+                expiration: {
+                  maxEntries: 20,
+                  maxAgeSeconds: 365 * 24 * 60 * 60,
+                },
+                cacheableResponse: { statuses: [0, 200] },
+              },
+            },
+          ],
+        },
         manifest: {
           name: 'ميداس الحلال',
           short_name: 'ميداس الحلال',

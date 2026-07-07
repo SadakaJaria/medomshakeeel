@@ -22,4 +22,23 @@ npm run preview
 ## المفاتيح
 انسخ `.env.example` إلى `.env` وعبّئ المفاتيح — `.env` غير متتبع في git.
 
+| المفتاح | الغرض | أين يعيش |
+|---|---|---|
+| `VITE_FINNHUB_API_KEY` | الأخبار والأسعار | واجهة (يُضمَّن في الـ bundle) |
+| `VITE_HALALTERMINAL_API_KEY` | الفرز الشرعي | واجهة (يُضمَّن في الـ bundle) |
+| `ANTHROPIC_API_KEY` | تحليل AI | **server-side فقط** — لا تسبقه بـ VITE_ أبداً |
+| `ANALYZE_MODEL` | (اختياري) نموذج التحليل | server-side، الافتراضي `claude-opus-4-8` |
+
+## النشر على Vercel (مرة واحدة)
+1. من [vercel.com/new](https://vercel.com/new) اختر **Import Git Repository** → `SadakaJaria/medomshakeeel`.
+2. الإعدادات تُكتشف تلقائياً (Vite): Build = `npm run build`، Output = `dist` — لا تغيّر شيئاً.
+3. في **Environment Variables** أضف المفاتيح الأربعة من الجدول أعلاه.
+4. اضغط **Deploy**. مجلد `api/` يُنشر تلقائياً كـ serverless functions، و`vercel.json` يضبط مسارات الـ SPA و`maxDuration` للتحليل.
+
+بعد أول نشر: افتح الموقع من الجوال → «إضافة إلى الشاشة الرئيسية» لتثبيته كتطبيق (PWA). التحديثات تصل تلقائياً مع كل push (الـ service worker بنمط autoUpdate).
+
+## PWA
+- يعمل offline: الواجهة والمسارات الداخلية تُقدَّم من الكاش، وبيانات الكون الحلال محفوظة في localStorage.
+- نداءات `/api/` لا تُكاش أبداً؛ خطوط Google تُكاش للعمل دون اتصال.
+
 راجع `CLAUDE.md` للتفاصيل الكاملة عن المشروع وحالته.
