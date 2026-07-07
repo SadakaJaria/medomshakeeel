@@ -3,6 +3,31 @@
 
 import { getQuote, getCompanyNews, hasFinnhubKey } from './finnhub'
 import { screenSymbolDetailed, hasScreeningKey } from './screening'
+import { getFinancials, hasFmpKey } from './fmp'
+
+/** يجمع كل سياق ورقة متاح بالتوازي (كل جزء اختياري ويفشل بصمت) */
+async function gatherContext(security) {
+  const bareSymbol = security.symbol ?? security.tvSymbol.split(':').pop()
+  const [quote, news, screening, financials] = await Promise.all([
+    hasFinnhubKey ? getQuote(bareSymbol).catch(() => null) : null,
+    hasFinnhubKey
+      ? getCompanyNews(bareSymbol, { limit: 5 })
+          .then((items) =>
+            items.map(({ headline, source, datetime }) => ({
+              headline,
+              source,
+              date: datetime
+                ? new Date(datetime * 1000).toISOString().slice(0, 10)
+                : undefined,
+            })),
+          )
+          .catch(() => null)
+      : null,
+    hasScreeningKey ? screenSymbolDetailed(bareSymbol).catch(() => null) : null,
+    hasFmpKey ? getFinancials(bareSymbol).catch(() => null) : null,
+  ])
+  return { security, quote, news, screening, financials }
+}
 
 const CACHE_TTL_MS = 60 * 60 * 1000 // التحليل مكلف — كاش ساعة
 
@@ -43,30 +68,12 @@ export async function analyzeSecurity(security, { force = false } = {}) {
     if (cached) return cached
   }
 
-  const bareSymbol = security.symbol ?? security.tvSymbol.split(':').pop()
-
-  const [quote, news, screening] = await Promise.all([
-    hasFinnhubKey ? getQuote(bareSymbol).catch(() => null) : null,
-    hasFinnhubKey
-      ? getCompanyNews(bareSymbol, { limit: 5 })
-          .then((items) =>
-            items.map(({ headline, source, datetime }) => ({
-              headline,
-              source,
-              date: datetime
-                ? new Date(datetime * 1000).toISOString().slice(0, 10)
-                : undefined,
-            })),
-          )
-          .catch(() => null)
-      : null,
-    hasScreeningKey ? screenSymbolDetailed(bareSymbol).catch(() => null) : null,
-  ])
+  const context = await gatherContext(security)
 
   const res = await fetch('/api/analyze', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ security, quote, news, screening }),
+    body: JSON.stringify(context),
   })
 
   const data = await res.json().catch(() => ({}))
@@ -75,5 +82,36 @@ export async function analyzeSecurity(security, { force = false } = {}) {
   }
 
   writeCache(security.tvSymbol, data.analysis, data.model)
+  return { analysis: data.analysis, model: data.model, cached: false }
+}
+
+/**
+ * مقارنة ورقتين ماليتين عبر AI — يجمع سياق كلٍّ منهما ويرسل mode=compare.
+ * كاش بمفتاح مركّب من الرمزين.
+ */
+export async function compareSecurities(securityA, securityB, { force = false } = {}) {
+  const pairKey = [securityA.tvSymbol, securityB.tvSymbol].sort().join('__')
+  if (!force) {
+    const cached = readCache(pairKey)
+    if (cached) return cached
+  }
+
+  const [contextA, contextB] = await Promise.all([
+    gatherContext(securityA),
+    gatherContext(securityB),
+  ])
+
+  const res = await fetch('/api/analyze', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mode: 'compare', items: [contextA, contextB] }),
+  })
+
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) {
+    throw new Error(data.message ?? `فشلت المقارنة (${res.status})`)
+  }
+
+  writeCache(pairKey, data.analysis, data.model)
   return { analysis: data.analysis, model: data.model, cached: false }
 }

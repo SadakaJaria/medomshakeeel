@@ -7,6 +7,7 @@ const links = [
   { to: '/watchlist', label: 'المتابعة' },
   { to: '/universe', label: 'الكون الحلال' },
   { to: '/security', label: 'الورقة المالية' },
+  { to: '/compare', label: 'مقارنة' },
   { to: '/tools', label: 'الأدوات' },
 ]
 

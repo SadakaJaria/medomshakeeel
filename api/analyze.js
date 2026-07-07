@@ -19,11 +19,28 @@ const SYSTEM_PROMPT = `أنت محلل أسواق مالية في تيرمينا
 ## الربط والخلاصة
 اجمع الخيطين: هل الوضع الشرعي مستقر أم على الحافة؟ وما الذي قد يقلبه (ارتفاع دين، هبوط قيمة سوقية...)؟ نقاط تستحق المراقبة.
 
+إذا وصلتك قوائم مالية (FMP: نسب TTM، قائمة دخل، قطاع)، ادمجها: اربط الربحية والدين ونسب السيولة بالقراءة الشرعية (نسبة الدين للسيولة تؤثر على الفرز)، واذكر الاتجاه إن أمكن.
+
 قواعد:
-- إذا غاب جزء من البيانات (سعر، أخبار، نسب)، قل ذلك صراحة وحلّل بما توفر — لا تخترع أرقاماً أبداً.
+- إذا غاب جزء من البيانات (سعر، أخبار، نسب، قوائم)، قل ذلك صراحة وحلّل بما توفر — لا تخترع أرقاماً أبداً.
 - استند إلى الأرقام المرسلة فقط، ولا تقدّم توصية شراء/بيع.
 - كن كثيفاً ومفيداً — تحليل تيرمينال لا مقال.
 - اختم بسطر واحد: هذا تحليل تعليمي وليس نصيحة استثمارية.`
+
+const COMPARE_PROMPT = `أنت محلل أسواق مالية في تيرمينال شخصي متوافق مع الشريعة، يستخدمه طالب إدارة استثمار للتعلّم (ليس للتداول).
+
+ستصلك بيانات JSON لورقتين ماليتين (لكل واحدة: تعريف، سعر، أخبار، فرز شرعي خام بالنسب والمنهجيات، وقوائم مالية إن توفرت). قارن بينهما بالعربية الفصحى (الرموز والأرقام لاتينية) بهذه البنية:
+
+## المقارنة المالية
+جدول أو قائمة تقابل النسب الرئيسية (الربحية، الدين، السيولة، التقييم) جنباً إلى جنب مع تعليق مختصر على من الأقوى في كل بُعد.
+
+## المقارنة الشرعية بالأرقام
+قابل حالة الفرز ونسب الدين/الدخل غير المتوافق ونسبة التطهير للورقتين. أيّهما أبعد عن حدود الفرز وأكثر استقراراً شرعياً؟ إن اختلفت المنهجيات في الحكم، اشرح.
+
+## الخلاصة المقارنة
+جمع الخيطين: نقاط قوة وضعف كل ورقة تعليمياً، وما الذي يميّز إحداهما عن الأخرى — دون توصية شراء/بيع.
+
+قواعد: استند للأرقام المرسلة فقط، صرّح بأي بيانات ناقصة، لا تخترع أرقاماً، واختم بسطر: هذا تحليل تعليمي وليس نصيحة استثمارية.`
 
 async function readBody(req) {
   // Vercel يوفر req.body جاهزاً، وconnect (بيئة التطوير) لا — نغطي الحالتين
@@ -68,26 +85,55 @@ export default async function handler(req, res) {
     return send(res, 400, { error: 'bad-json', message: 'جسم الطلب ليس JSON صالحاً' })
   }
 
-  const { security, quote, news, screening } = payload ?? {}
-  if (!security?.tvSymbol) {
-    return send(res, 400, { error: 'bad-request', message: 'security.tvSymbol مطلوب' })
+  // سياق ورقة واحدة → نص منظّم للبرومبت
+  function contextBlock({ security, quote, news, screening, financials }) {
+    return [
+      `### الورقة (من الكون الحلال)`,
+      boundedJson(security, 2000),
+      ``,
+      `### السعر والتغيّر (Finnhub)`,
+      boundedJson(quote, 1000),
+      ``,
+      `### أهم الأخبار الأخيرة`,
+      boundedJson(news, 2500),
+      ``,
+      `### بيانات الفرز الشرعي الخام (Halal Terminal — النسب والمنهجيات)`,
+      boundedJson(screening, 5000),
+      ``,
+      `### القوائم المالية والنسب (FMP)`,
+      boundedJson(financials, 2500),
+    ].join('\n')
   }
 
-  const userContent = [
-    `حلّل الورقة المالية التالية:`,
-    ``,
-    `### الورقة (من الكون الحلال)`,
-    boundedJson(security, 2000),
-    ``,
-    `### السعر والتغيّر (Finnhub)`,
-    boundedJson(quote, 1000),
-    ``,
-    `### أهم الأخبار الأخيرة`,
-    boundedJson(news, 2500),
-    ``,
-    `### بيانات الفرز الشرعي الخام (Halal Terminal — النسب والمنهجيات)`,
-    boundedJson(screening, 6000),
-  ].join('\n')
+  let systemPrompt
+  let userContent
+
+  if (payload?.mode === 'compare') {
+    const items = Array.isArray(payload.items) ? payload.items : []
+    if (items.length !== 2 || !items[0]?.security?.tvSymbol || !items[1]?.security?.tvSymbol) {
+      return send(res, 400, {
+        error: 'bad-request',
+        message: 'المقارنة تتطلب ورقتين صالحتين',
+      })
+    }
+    systemPrompt = COMPARE_PROMPT
+    userContent = [
+      `قارن بين الورقتين التاليتين:`,
+      ``,
+      `## الورقة الأولى: ${items[0].security.tvSymbol}`,
+      contextBlock(items[0]),
+      ``,
+      `## الورقة الثانية: ${items[1].security.tvSymbol}`,
+      contextBlock(items[1]),
+    ].join('\n')
+  } else {
+    const { security } = payload ?? {}
+    if (!security?.tvSymbol) {
+      return send(res, 400, { error: 'bad-request', message: 'security.tvSymbol مطلوب' })
+    }
+    systemPrompt = SYSTEM_PROMPT
+    userContent = ['حلّل الورقة المالية التالية:', '', contextBlock(payload)].join('\n')
+  }
 
   const client = new Anthropic({ timeout: 55_000, maxRetries: 1 })
 
@@ -97,7 +143,7 @@ export default async function handler(req, res) {
       max_tokens: 8000,
       thinking: { type: 'adaptive' },
       output_config: { effort: 'medium' },
-      system: SYSTEM_PROMPT,
+      system: systemPrompt,
       messages: [{ role: 'user', content: userContent }],
     })
 

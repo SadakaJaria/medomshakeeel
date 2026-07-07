@@ -8,6 +8,7 @@ import SecurityPage from './pages/SecurityPage'
 import HalalUniverse from './pages/HalalUniverse'
 import Tools from './pages/Tools'
 import Markets from './pages/Markets'
+import Compare from './pages/Compare'
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
               <Route path="/watchlist" element={<Watchlist />} />
               <Route path="/universe" element={<HalalUniverse />} />
               <Route path="/markets" element={<Markets />} />
+              <Route path="/compare" element={<Compare />} />
               <Route path="/tools" element={<Tools />} />
               <Route path="/security" element={<SecurityPage />} />
               <Route path="/security/:tvSymbol" element={<SecurityPage />} />

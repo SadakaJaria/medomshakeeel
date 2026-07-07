@@ -1,32 +1,6 @@
 import { useEffect, useState } from 'react'
 import { analyzeSecurity } from '../../lib/analyze'
-
-/** عرض مبسط: أسطر "## عنوان" تصبح عناوين، والباقي فقرات pre-wrap */
-function AnalysisText({ text }) {
-  const blocks = text.split(/\n(?=## )/)
-  return (
-    <div className="max-h-96 space-y-3 overflow-y-auto text-sm leading-relaxed">
-      {blocks.map((block, i) => {
-        const [first, ...rest] = block.split('\n')
-        if (first.startsWith('## ')) {
-          return (
-            <section key={i}>
-              <h3 className="mb-1 font-semibold text-market-up">
-                {first.slice(3)}
-              </h3>
-              <p className="whitespace-pre-wrap">{rest.join('\n').trim()}</p>
-            </section>
-          )
-        }
-        return (
-          <p key={i} className="whitespace-pre-wrap">
-            {block.trim()}
-          </p>
-        )
-      })}
-    </div>
-  )
-}
+import AnalysisText from './AnalysisText'
 
 /** بطاقة تحليل AI في صفحة الورقة المالية */
 function AnalyzeCard({ security }) {
@@ -94,7 +68,9 @@ function AnalyzeCard({ security }) {
 
       {state.status === 'done' && (
         <div>
-          <AnalysisText text={state.analysis} />
+          <div className="max-h-96 overflow-y-auto">
+            <AnalysisText text={state.analysis} />
+          </div>
           <p className="mt-3 border-t border-terminal-border/50 pt-2 text-xs text-terminal-muted">
             <span className="ltr-nums">{state.model}</span>
             {state.cached && ' · من الكاش (آخر ساعة)'}
