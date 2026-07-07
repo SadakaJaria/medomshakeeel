@@ -6,6 +6,7 @@ const links = [
   { to: '/watchlist', label: 'المتابعة' },
   { to: '/universe', label: 'الكون الحلال' },
   { to: '/security', label: 'الورقة المالية' },
+  { to: '/tools', label: 'الأدوات' },
 ]
 
 function Nav() {
