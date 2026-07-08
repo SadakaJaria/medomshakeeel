@@ -4,6 +4,7 @@ import { SHARIAH_STATUSES, SECURITY_TYPES, MARKETS } from '../lib/halal'
 import { refreshScreening, hasScreeningKey } from '../lib/screening'
 import ShariahBadge from '../components/halal/ShariahBadge'
 import SecurityForm from '../components/halal/SecurityForm'
+import ImportUniverse from '../components/halal/ImportUniverse'
 
 const filterClass =
   'rounded border border-terminal-border bg-terminal-surface px-2 py-1.5 text-sm focus:outline-none'
@@ -145,7 +146,7 @@ function HalalUniverse() {
             onClick={() => importRef.current?.click()}
             className="rounded border border-terminal-border px-3 py-1.5 text-sm text-terminal-muted transition-colors hover:text-terminal-text"
           >
-            استيراد
+            استيراد JSON
           </button>
           <input
             ref={importRef}
@@ -156,6 +157,13 @@ function HalalUniverse() {
           />
         </div>
       </div>
+
+      <ImportUniverse
+        existingSymbols={universe.map((s) => s.tvSymbol)}
+        onImport={(fresh) => {
+          if (fresh.length) replaceUniverse([...universe, ...fresh])
+        }}
+      />
 
       {formMode && (
         <SecurityForm
