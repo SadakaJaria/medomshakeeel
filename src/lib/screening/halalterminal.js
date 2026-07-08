@@ -6,8 +6,10 @@
 const BASE = 'https://api.halalterminal.com'
 const API_KEY = import.meta.env.VITE_HALALTERMINAL_API_KEY
 
-const SCREEN_PATH = (symbol) =>
-  `/api/stocks/${encodeURIComponent(symbol)}/screening`
+// الفرز الفردي — النمط المعلن /api/screen/{symbol}
+const SCREEN_PATH = (symbol) => `/api/screen/${encodeURIComponent(symbol)}`
+// تصفّح قاعدة الأسهم المتوافقة حسب القطاع — /api/database/search
+const DATABASE_SEARCH_PATH = '/api/database/search'
 
 export const hasScreeningKey = Boolean(API_KEY)
 
@@ -95,4 +97,71 @@ export async function screenSymbol(symbol) {
     purificationRatio,
     lastChecked: new Date().toISOString().slice(0, 10),
   }
+}
+
+// خريطة بورصة → سوق المشروع
+const EXCHANGE_MARKET = {
+  NASDAQ: 'US', NYSE: 'US', AMEX: 'US', BATS: 'US',
+  BIST: 'BIST',
+  TADAWUL: 'GCC', DFM: 'GCC', ADX: 'GCC', QE: 'GCC', BOURSAKUWAIT: 'GCC', BHB: 'GCC', MSM: 'GCC',
+}
+
+function inferMarket(exchange) {
+  return EXCHANGE_MARKET[String(exchange || '').toUpperCase()] ?? 'GLOBAL'
+}
+
+/** تطبيع عنصر من /api/database/search إلى ورقة كون حلال (أو null إن نقص الرمز) */
+function mapToSecurity(item) {
+  const symbol = String(
+    pickFirst(item, ['symbol', 'ticker', 'Symbol']) ?? '',
+  ).toUpperCase().trim()
+  if (!symbol) return null
+
+  const exchange = String(
+    pickFirst(item, ['exchange', 'exchangeShortName', 'mic', 'exchangeCode']) ?? '',
+  ).toUpperCase().trim()
+
+  const tvSymbol = exchange ? `${exchange}:${symbol}` : symbol
+  const rawStatus = pickFirst(item, [
+    'compliance', 'complianceStatus', 'status', 'shariahStatus',
+  ])
+  let ratio = Number(
+    pickFirst(item, ['purificationRatio', 'purification_percentage', 'purificationPercent']) ?? 0,
+  )
+  if (!Number.isFinite(ratio)) ratio = 0
+  if (ratio > 1) ratio = ratio / 100
+
+  const name = pickFirst(item, ['companyName', 'name', 'company'])
+  const sector = pickFirst(item, ['sector', 'industry'])
+
+  return {
+    symbol,
+    exchange,
+    tvSymbol,
+    type: 'stock',
+    market: inferMarket(exchange),
+    shariah: {
+      status: normalizeStatus(rawStatus),
+      source: 'halalterminal',
+      purificationRatio: ratio,
+      lastChecked: new Date().toISOString().slice(0, 10),
+    },
+    tags: sector ? [String(sector).toLowerCase()] : [],
+    notes: name ? String(name) : '',
+    details: {},
+  }
+}
+
+/**
+ * تصفّح قاعدة الأسهم المتوافقة — يرجع مصفوفة أوراق كون حلال مفحوصة جاهزة.
+ * sector اختياري؛ limit يحدّ العدد. الحقول تُلتقط بمرونة (الشكل قد يختلف).
+ */
+export async function searchCompliant({ sector = '', limit = 50 } = {}) {
+  const params = new URLSearchParams()
+  if (sector) params.set('sector', sector)
+  params.set('limit', String(limit))
+  const data = await get(`${DATABASE_SEARCH_PATH}?${params}`)
+  const list = data?.data ?? data?.results ?? data?.stocks ?? data
+  if (!Array.isArray(list)) return []
+  return list.map(mapToSecurity).filter(Boolean)
 }
